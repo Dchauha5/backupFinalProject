@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require("cors");
 const mongoose = require("mongoose");
 const chartDataSchema = require("./models/chart_data_schema");
+const UserSchema = require("./models/UserSchema");
 
 const bodyParser = require('body-parser');
 
@@ -16,12 +17,66 @@ app.use(cors());
 
 
 
-app.get("/hello", (req, res) => {
-    console.log("Hello");
-    res.json({
-        data: "Hello"
-    });
+app.post("/user/valid", (req, res) => {
+  mongoose.connect(url).then(() => {
+      var user = {
+          email: req.body.email,
+          password: req.body.password,
+      };
+      console.log(user);
+    UserSchema.find({
+                email: user.email,
+                password : user.password
+            }, function (err, docs) {
+             if (docs.length) {
+                 res.json("true")
+                 return 1;
+             } else {
+                 res.json("false")
+                return 0;
+             }
+         })
+     .catch(connectionError => {
+          console.log(connectionError);
+      });
+  }).catch(connectionError => {
+      console.log(connectionError);
+  });
+
 });
+
+app.post("/new/user",(req,res) =>{
+    console.log("req",req.body);
+    mongoose.connect(url).then(() => {
+        var user = {
+            email: req.body.email,
+            password: req.body.password,
+        };
+        UserSchema.insertMany(user).then((data) => {
+            res.json(data);
+            mongoose.connection.close();
+        }).catch(connectionError => {
+            console.log(connectionError);
+        });
+        
+    }).catch(connectionError => {
+        console.log(connectionError);
+    });
+
+})
+
+app.delete("/remove/budget", (req, res) => {
+    console.log("EXE");
+    mongoose.connect(url).then(() => {
+    chartDataSchema.deleteMany({}).then(
+        res.json("done")
+    )
+        .catch(connectionError => {
+            console.log(connectionError);
+        });
+    })
+})
+
 
 app.get("/budget", (req, res) => {
     mongoose.connect(url, {
@@ -41,9 +96,8 @@ app.get("/budget", (req, res) => {
 });
 
 
-app.post("/addBudget", (req, res) => {
-    console.log("ADDDDDDDDDDD");
-    console.log(req.body);
+app.post("/new/budget", (req, res) => {
+    
     mongoose.connect(url).then(() => {
         var chartData = {
             title: req.body.title,
@@ -60,6 +114,7 @@ app.post("/addBudget", (req, res) => {
     }).catch(connectionError => {
         console.log(connectionError);
     });
+
 })
 
 app.listen(port, () => {

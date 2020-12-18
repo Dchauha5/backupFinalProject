@@ -1,83 +1,45 @@
-<body>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
 
-  <div class="container-fluid">
-
-
-      <main>
-          <div class="row">
-              <label for="username">Username</label>
-              <input type="text" name="username" id="username">
-          </div>
-
-          <div class="row">
-              <label for="password">Password</label>
-              <input type="password" name="password" id="password">
-          </div>
-
-          <div>
-              <button onclick="login()">Login</button>
-
-
-
-          </div>
-      </main>
+<div class="container login-container">
+  <div class="row">
+    <div class="col-md-6 login-form-1">
+      <h3>Login</h3>
+      <form>
+        <div class="form-group">
+          <input type="text" class="form-control" name="loginEmail"
+           [(ngModel)]="loginEmail" placeholder="Your Email.." />
+        </div>
+        <div class="form-group">
+          <input type="password" name="loginPassword" class="form-control"
+          [(ngModel)]="loginPassword" placeholder="Your Password.." value="" />
+        </div>
+        <div class="form-group">
+          <input type="submit" class="btnSubmit" (click)="onLogin()"  value="Login" />
+        </div>
+      </form>
+    </div>
+    <div class="col-md-6 login-form-2">
+      <h3>Sign Up</h3>
+      <form>
+        <div class="form-group">
+          <input type="text" class="form-control" name="signUpEmail"
+          [(ngModel)]="signUpEmail" placeholder="Your Email.." value="" />
+        </div>
+        <div class="form-group">
+          <input type="password" name="signUpPassword" class="form-control"
+          [(ngModel)]="signUpPassword" placeholder="Your Password.. " value="" />
+        </div>
+        <div class="form-group">
+          <input type="password" name="signUpPasswordRepeat" class="form-control"
+          [(ngModel)]="signUpPasswordRepeat" placeholder="Repeat Your Password.. " value="" />
+        </div>
+        <div class="form-group">
+          <input type="submit" class="btnSubmit" (click)="onSignUp()"  value="signUp" />
+        </div>
+      </form>
+    </div>
   </div>
-
-  <script>
-      function login() {
-              const data = {
-                  username: document.getElementById('username').value,
-                  password: document.getElementById('password').value,
-
-              };
-              axios.post('/api/login', data)
-              .then(res => {
-                  console.log(res);
-                  document.getElementById('username').value = '';
-               document.getElementById('password').value = '';
-
-               if (res && res.data && res.data.success) {
-                    const  token =  res.data.token;
-                    localStorage.setItem('jwt',token);
-                      getDashboard();
-                  }
-
-              });
-      }
-
-      function getDashboard() {
-          const token = localStorage.getItem('jwt');
-         axios.get('/api/dashboard', {
-              headers: {
-                  'Authorization': `Bearer ${token}`
-              }
-          }).then(res => {
-              if (res && res.data && res.data.success) {
-                  history.pushState(null,null,'dashboard');
-                  document.querySelector('h1.row').innerHTML = 'Dashboard';
-                  document.querySelector('main').innerHTML = res.data.myContent;
-              }
-          });
-      }
-
-
-
-      function getSettings() {
-          const token = localStorage.getItem('jwt');
-         axios.get('/api/settings', {
-              headers: {
-                  'Authorization': `Bearer ${token}`
-              }
-          }).then(res => {
-              if (res && res.data && res.data.success) {
-                  history.pushState(null,null,'settings');
-                  document.querySelector('h1.row').innerHTML = 'Settings';
-                  document.querySelector('main').innerHTML = res.data.myContent;
-              }
-          });
-      }
-
-
-  </script>
-
-</body>
+</div>
