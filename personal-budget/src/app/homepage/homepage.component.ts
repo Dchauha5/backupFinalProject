@@ -53,25 +53,45 @@ createChart() {
       data: this.dataSource
     });
 
-  var ctx = document.getElementById('myChartBar');  
+  var ctx = document.getElementById('myChartBar');
   var mixedChart = new Chart(ctx, {
     type: 'bar',
     data: this.dataSource,
+    options: {
+      responsive: true,
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+      }
+  }
      });
 
 
-  var ctx = document.getElementById('polarArea'); 
+  var ctx = document.getElementById('polarArea');
   var mixedChart = new Chart(ctx, {
     type: 'polarArea',
     data: this.dataSource,
      });
 
-  var ctx = document.getElementById('line'); 
+  var ctx = document.getElementById('line');
   var mixedChart = new Chart(ctx, {
     type: 'line',
     data: this.dataSource,
+    options: {
+      responsive: true,
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+      }
+  }
      });
-     
+
   }
 
 updateBudget(){
